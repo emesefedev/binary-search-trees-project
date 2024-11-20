@@ -12,11 +12,13 @@ class Node {
     setRightChild(child) {
         this.rightChild = child
     }
+
+    isLeaf() {
+        return this.leftChild !== undefined || this.rightChild !== undefined
+    }
 }
 
 export class Tree {
-    root = undefined
-
     constructor(array = []) {
         this.array = array
     }
@@ -37,13 +39,29 @@ export class Tree {
     }
 
     prettyPrint(node, prefix = "", isLeft = true) {
-        if (node === undefined) return
+        if (node == undefined) return
         
-        if (node.rightChild !== undefined) this.prettyPrint(node.rightChild, `${prefix}${isLeft ? "│   " : "    "}`, false)
+        if (node.rightChild != undefined) this.prettyPrint(node.rightChild, `${prefix}${isLeft ? "│   " : "    "}`, false)
         
         console.log(`${prefix}${isLeft ? "└── " : "┌── "}${node.data}`)
         
-        if (node.leftChild !== undefined) this.prettyPrint(node.leftChild, `${prefix}${isLeft ? "    " : "│   "}`, true)
+        if (node.leftChild != undefined) this.prettyPrint(node.leftChild, `${prefix}${isLeft ? "    " : "│   "}`, true)
+    }
+
+    insert(data, node) {
+        if (node == undefined) return new Node({data})
+
+        if (node.data === data) return node
+
+        console.log(`data: ${node.data}`)
+
+        if (node.data > data) {
+            node.setLeftChild(this.insert(data, node.leftChild))
+        } else {
+            node.setRightChild(this.insert(data, node.rightChild))
+        }
+
+        return node
     }
      
 }
