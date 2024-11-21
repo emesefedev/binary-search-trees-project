@@ -109,5 +109,21 @@ export class Tree {
             return this.find(data, node.rightChild)
         }
     }
+
+    levelOrder(callback, node) {
+        if (callback == undefined) throw new Error('Callback is required')
+
+        if (node == undefined) return
+        const queue = []
+        queue.push(node)
+
+        while(queue.length > 0) {
+            const currentNode = queue.shift()
+            callback(currentNode)
+            if (currentNode.leftChild != undefined) queue.push(currentNode.leftChild)
+            if (currentNode.rightChild != undefined) queue.push(currentNode.rightChild)
+        }
+        
+    }
      
 }
