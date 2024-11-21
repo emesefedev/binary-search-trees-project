@@ -1,8 +1,8 @@
 import { Tree } from "./tree.js";
 
 const tree = new Tree([1, 5, 6])
-const root = tree.buildTree()
-tree.prettyPrint(root)
-tree.insert(2, root)
-tree.prettyPrint(root)
+tree.prettyPrint()
+tree.insert(6)
+tree.prettyPrint()
 
+console.log(tree.depth(tree.find(5)))

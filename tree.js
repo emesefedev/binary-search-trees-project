@@ -25,10 +25,11 @@ class Node {
 export class Tree {
     constructor(array = []) {
         this.array = array
+        this.root = this.buildTree(array)
     }
 
-    buildTree(array = this.array, start = 0, end = undefined) {
-        if (array.length <= 0) return 
+    buildTree(array, start = 0, end = undefined) {
+        if (array.length <= 0) return undefined
         if (end == undefined) end = array.length - 1
 
         if (start > end) return undefined
@@ -42,7 +43,7 @@ export class Tree {
         return root
     }
 
-    prettyPrint(node, prefix = "", isLeft = true) {
+    prettyPrint(node = this.root, prefix = "", isLeft = true) {
         if (node == undefined) return
         
         if (node.rightChild != undefined) this.prettyPrint(node.rightChild, `${prefix}${isLeft ? "│   " : "    "}`, false)
@@ -52,18 +53,23 @@ export class Tree {
         if (node.leftChild != undefined) this.prettyPrint(node.leftChild, `${prefix}${isLeft ? "    " : "│   "}`, true)
     }
 
-    insert(data, node) {
+    insertRecursive(data, node) {
         if (node == undefined) return new Node({data})
 
         if (node.data === data) return node
 
         if (node.data > data) {
-            node.setLeftChild(this.insert(data, node.leftChild))
+            node.setLeftChild(this.insertRecursive(data, node.leftChild))
         } else {
-            node.setRightChild(this.insert(data, node.rightChild))
+            node.setRightChild(this.insertRecursive(data, node.rightChild))
         }
 
         return node
+    }
+
+    insert(data) {
+        this.prettyPrint(this.root)
+        this.insertRecursive(data, this.root)
     }
 
     getSuccessor(node) {
@@ -75,7 +81,7 @@ export class Tree {
         return successor
     }
 
-    delete(data, node){
+    delete(data, node = this.root){
         if (node == undefined) return node
 
         if (node.data > data) {
@@ -97,9 +103,8 @@ export class Tree {
         return node
     }
 
-    find(data, node) {
+    find(data, node = this.root) {
         if (node == undefined) return undefined
-        console.log(`looking at ${node.data}`)
 
         if (node.data === data) return node
 
@@ -110,7 +115,7 @@ export class Tree {
         }
     }
 
-    levelOrderIterative(callback, node) {
+    levelOrderIterative(callback, node = this.root) {
         if (callback == undefined) throw new Error('Callback is required')
 
         if (node == undefined) return
@@ -126,7 +131,7 @@ export class Tree {
         }
     }
 
-    levelOrder(callback, nodesInLevel) {
+    levelOrder(callback, nodesInLevel = [this.root]) {
         if (callback == undefined) throw new Error('Callback is required')
 
         if (nodesInLevel.length <= 0) return
@@ -141,7 +146,7 @@ export class Tree {
         this.levelOrder(callback, nextLevel)
     }
 
-    inOrder(callback, node) {
+    inOrder(callback, node = this.root) {
         if (callback == undefined) throw new Error('Callback is required')
 
         if (node == undefined) return
@@ -151,7 +156,7 @@ export class Tree {
         this.inOrder(callback, node.rightChild)
     }
 
-    preOrder(callback, node) {
+    preOrder(callback, node = this.root) {
         if (callback == undefined) throw new Error('Callback is required')
 
         if (node == undefined) return
@@ -161,7 +166,7 @@ export class Tree {
         this.preOrder(callback, node.rightChild)
     }
 
-    postOrder(callback, node) {
+    postOrder(callback, node = this.root) {
         if (callback == undefined) throw new Error('Callback is required')
 
         if (node == undefined) return
@@ -171,7 +176,7 @@ export class Tree {
         callback(node)
     }
 
-    height(node, height = 0) {
+    height(node = this.root, height = 0) {
         if (node == undefined) return 0
 
         height++
@@ -184,6 +189,20 @@ export class Tree {
         if (height > heightMax) heightMax = height
 
         return heightMax
+    }
+
+    depth(targetNode, node = this.root, depth = 0) {
+        if (targetNode == undefined) return undefined
+
+        if (targetNode.data === node.data) return depth
+        
+        depth++
+
+        if (node.data > targetNode.data) {
+            return this.depth(targetNode, node.leftChild, depth)
+        } else {
+            return this.depth(targetNode, node.rightChild, depth)
+        }
     }
      
 }
