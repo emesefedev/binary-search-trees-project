@@ -186,8 +186,7 @@ export class Tree {
         callback(node)
     }
 
-    height(node) {
-        if (node == undefined) node = this.root
+    height(node = this.root) {
         return this.heightRecursive(node)
     }
 
@@ -221,12 +220,9 @@ export class Tree {
     }
 
     isBalanced(node = this.root) {
-        const heightLeft = this.height(node.leftChild)
-
-        console.log(`rightChild ${node.rightChild}`)
-        const heightRight = this.height(node.rightChild)
-
-        console.log(`left: ${heightLeft} right ${heightRight}`)
+        // TODO: Check for every node
+        const heightLeft = this.heightRecursive(node.leftChild)
+        const heightRight = this.heightRecursive(node.rightChild)
 
         return Math.abs(heightLeft - heightRight) <=1
     }
