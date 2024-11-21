@@ -26,6 +26,7 @@ export class Tree {
     constructor(array = []) {
         this.array = array
         this.root = this.buildTree(array)
+        this.prettyPrint()
     }
 
     buildTree(array, start = 0, end = undefined) {
@@ -53,6 +54,11 @@ export class Tree {
         if (node.leftChild != undefined) this.prettyPrint(node.leftChild, `${prefix}${isLeft ? "    " : "│   "}`, true)
     }
 
+    insert(data) {
+        this.insertRecursive(data, this.root)
+        this.prettyPrint()
+    }
+
     insertRecursive(data, node) {
         if (node == undefined) return new Node({data})
 
@@ -67,11 +73,6 @@ export class Tree {
         return node
     }
 
-    insert(data) {
-        this.prettyPrint(this.root)
-        this.insertRecursive(data, this.root)
-    }
-
     getSuccessor(node) {
         const successor = node.rightChild
         while (successor != undefined && successor.leftChild != undefined) {
@@ -81,13 +82,18 @@ export class Tree {
         return successor
     }
 
-    delete(data, node = this.root){
+    delete(data) {
+        this.deleteRecursive(data, this.root)
+        this.prettyPrint()
+    }
+
+    deleteRecursive(data, node){
         if (node == undefined) return node
 
         if (node.data > data) {
-            node.setLeftChild(this.delete(data, node.leftChild))
+            node.setLeftChild(this.deleteRecursive(data, node.leftChild))
         } else if (node.data < data) {
-            node.setRightChild(this.delete(data, node.rightChild))
+            node.setRightChild(this.deleteRecursive(data, node.rightChild))
         } else {
             // Case 1: Leaf node or One child
             if (node.leftChild == undefined) return node.rightChild
@@ -97,21 +103,25 @@ export class Tree {
             // Case 3: Two children
             const successor = this.getSuccessor(node)
             node.setData(successor.data)
-            node.setRightChild(this.delete(successor.data, node.rightChild))
+            node.setRightChild(this.deleteRecursive(successor.data, node.rightChild))
         }
         
         return node
     }
 
-    find(data, node = this.root) {
+    find(data) {
+        return this.findRecursive(data, this.root)
+    }
+
+    findRecursive(data, node) {
         if (node == undefined) return undefined
 
         if (node.data === data) return node
 
         if (node.data > data) {
-            return this.find(data, node.leftChild)
+            return this.findRecursive(data, node.leftChild)
         } else {
-            return this.find(data, node.rightChild)
+            return this.findRecursive(data, node.rightChild)
         }
     }
 
@@ -176,13 +186,18 @@ export class Tree {
         callback(node)
     }
 
-    height(node = this.root, height = 0) {
+    height(node) {
+        if (node == undefined) node = this.root
+        return this.heightRecursive(node)
+    }
+
+    heightRecursive(node, height = 0) {
         if (node == undefined) return 0
 
         height++
 
-        const heightLeft = this.height(node.leftChild, height)
-        const heightRight = this.height(node.rightChild, height)
+        const heightLeft = this.heightRecursive(node.leftChild, height)
+        const heightRight = this.heightRecursive(node.rightChild, height)
 
         let heightMax = heightLeft
         if (heightRight > heightLeft) heightMax = heightRight
@@ -203,6 +218,17 @@ export class Tree {
         } else {
             return this.depth(targetNode, node.rightChild, depth)
         }
+    }
+
+    isBalanced(node = this.root) {
+        const heightLeft = this.height(node.leftChild)
+
+        console.log(`rightChild ${node.rightChild}`)
+        const heightRight = this.height(node.rightChild)
+
+        console.log(`left: ${heightLeft} right ${heightRight}`)
+
+        return Math.abs(heightLeft - heightRight) <=1
     }
      
 }
