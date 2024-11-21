@@ -2,10 +2,11 @@ import { Tree } from "./tree.js";
 
 const tree = new Tree([1, 5, 6])
 tree.insert(7)
+tree.prettyPrint()
 tree.insert(8)
 tree.insert(9)
-tree.insert(10)
+tree.prettyPrint()
 
-console.log(tree.height(undefined))
+tree.rebalance()
 
-console.log(tree.isBalanced())
+tree.prettyPrint()
