@@ -5,4 +5,4 @@ const root = tree.buildTree()
 tree.prettyPrint(root)
 tree.insert(2, root)
 tree.prettyPrint(root)
-tree.levelOrder((node) => console.log(node.data), [root])
+

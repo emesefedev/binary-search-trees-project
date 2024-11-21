@@ -157,8 +157,8 @@ export class Tree {
         if (node == undefined) return
 
         callback(node)
-        this.inOrder(callback, node.leftChild)
-        this.inOrder(callback, node.rightChild)
+        this.preOrder(callback, node.leftChild)
+        this.preOrder(callback, node.rightChild)
     }
 
     postOrder(callback, node) {
@@ -166,9 +166,24 @@ export class Tree {
 
         if (node == undefined) return
 
-        this.inOrder(callback, node.leftChild)
-        this.inOrder(callback, node.rightChild)
+        this.postOrder(callback, node.leftChild)
+        this.postOrder(callback, node.rightChild)
         callback(node)
+    }
+
+    height(node, height = 0) {
+        if (node == undefined) return 0
+
+        height++
+
+        const heightLeft = this.height(node.leftChild, height)
+        const heightRight = this.height(node.rightChild, height)
+
+        let heightMax = heightLeft
+        if (heightRight > heightLeft) heightMax = heightRight
+        if (height > heightMax) heightMax = height
+
+        return heightMax
     }
      
 }
