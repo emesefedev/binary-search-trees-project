@@ -96,5 +96,18 @@ export class Tree {
         
         return node
     }
+
+    find(data, node) {
+        if (node == undefined) return undefined
+        console.log(`looking at ${node.data}`)
+
+        if (node.data === data) return node
+
+        if (node.data > data) {
+            return this.find(data, node.leftChild)
+        } else {
+            return this.find(data, node.rightChild)
+        }
+    }
      
 }
