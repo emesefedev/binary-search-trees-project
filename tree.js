@@ -110,10 +110,11 @@ export class Tree {
         }
     }
 
-    levelOrder(callback, node) {
+    levelOrderIterative(callback, node) {
         if (callback == undefined) throw new Error('Callback is required')
 
         if (node == undefined) return
+        
         const queue = []
         queue.push(node)
 
@@ -123,7 +124,51 @@ export class Tree {
             if (currentNode.leftChild != undefined) queue.push(currentNode.leftChild)
             if (currentNode.rightChild != undefined) queue.push(currentNode.rightChild)
         }
-        
+    }
+
+    levelOrder(callback, nodesInLevel) {
+        if (callback == undefined) throw new Error('Callback is required')
+
+        if (nodesInLevel.length <= 0) return
+
+        const nextLevel = []
+        for (const node of nodesInLevel) {
+            callback(node)
+            if (node.leftChild != undefined) nextLevel.push(node.leftChild)
+            if (node.rightChild != undefined) nextLevel.push(node.rightChild)
+        }
+
+        this.levelOrder(callback, nextLevel)
+    }
+
+    inOrder(callback, node) {
+        if (callback == undefined) throw new Error('Callback is required')
+
+        if (node == undefined) return
+
+        this.inOrder(callback, node.leftChild)
+        callback(node)
+        this.inOrder(callback, node.rightChild)
+    }
+
+    preOrder(callback, node) {
+        if (callback == undefined) throw new Error('Callback is required')
+
+        if (node == undefined) return
+
+        callback(node)
+        this.inOrder(callback, node.leftChild)
+        this.inOrder(callback, node.rightChild)
+    }
+
+    postOrder(callback, node) {
+        if (callback == undefined) throw new Error('Callback is required')
+
+        if (node == undefined) return
+
+        this.inOrder(callback, node.leftChild)
+        this.inOrder(callback, node.rightChild)
+        callback(node)
     }
      
 }
